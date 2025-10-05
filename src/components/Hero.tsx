@@ -4,7 +4,6 @@ import { Card } from "@/components/ui/card";
 import profileImage from "../assets/naimul-profile.jpg";
 
 const Hero = () => {
-  const profileImage = "https://github.com/gmnaimul/quader-folio-glow/blob/main/src/assets/naimul-profile.jpg?raw=true";
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth"
