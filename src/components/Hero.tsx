@@ -3,7 +3,7 @@ import { ArrowRight, Code2, Database, Shield, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
 
 const Hero = () => {
-  const profileImage = "https://github.com/gmnaimul/quader-folio-glow/blob/main/src/assets/naimul-profile.jpg?raw=true";
+  const profileImage = "https://raw.githubusercontent.com/gmnaimul/quader-folio-glow/main/src/assets/naimul-profile.jpg";
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth"
