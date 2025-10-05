@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Code2, Database, Shield, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import profileImage from "../assets/naimul-profile.jpg";
+
 
 const Hero = () => {
+  const profileImage = "https://github.com/gmnaimul/my-portfolio/blob/main/src/assets/naimul-profile.jpg?raw=true";
   const scrollToSection = (id: string) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: "smooth"
