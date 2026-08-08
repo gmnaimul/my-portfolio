@@ -17,7 +17,7 @@ const Experience = () => {
     {
       title: "DevOps Intern",
       company: "Anwar Group of Industries",
-      period: "Apr 2023 – Sep 2023",
+      period: "Mar 2023 – Sep 2023",
       responsibilities: [
         "Assisted in setting up CI/CD pipelines using Jenkins and Docker",
         "Configured and managed Kubernetes environments for containerized applications",
