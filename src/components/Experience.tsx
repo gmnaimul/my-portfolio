@@ -6,7 +6,7 @@ const Experience = () => {
     {
       title: "Jr. Data Analyst (Remote)",
       company: "LIIA Smart Incorporation",
-      period: "Dec 2024 – Jun 2025",
+      period: "Sep 2025 – May 2026",
       responsibilities: [
         "Performed statistical analysis on large datasets using Python (Pandas, NumPy, SciPy)",
         "Automated data-cleaning workflows, reducing processing time by 35%",
@@ -17,7 +17,7 @@ const Experience = () => {
     {
       title: "DevOps Intern",
       company: "Anwar Group of Industries",
-      period: "May 2023 – Jun 2023",
+      period: "Apr 2023 – Sep 2023",
       responsibilities: [
         "Assisted in setting up CI/CD pipelines using Jenkins and Docker",
         "Configured and managed Kubernetes environments for containerized applications",
