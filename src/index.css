@@ -1,0 +1,370 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================
+   DARK MINIMAL AI PORTFOLIO THEME
+   Fixed Ambient Background
+   ========================================= */
+
+@layer base {
+  :root {
+    /* =====================================
+       Main Theme
+       ===================================== */
+
+    --background: 225 20% 5%;
+    --foreground: 210 20% 96%;
+
+
+    /* =====================================
+       Cards
+       ===================================== */
+
+    --card: 225 18% 8%;
+    --card-foreground: 210 20% 96%;
+
+
+    /* =====================================
+       Popovers
+       ===================================== */
+
+    --popover: 225 18% 9%;
+    --popover-foreground: 210 20% 96%;
+
+
+    /* =====================================
+       Primary
+       White
+       ===================================== */
+
+    --primary: 210 20% 96%;
+    --primary-foreground: 225 20% 5%;
+
+
+    /* =====================================
+       Secondary
+       ===================================== */
+
+    --secondary: 225 14% 15%;
+    --secondary-foreground: 210 20% 96%;
+
+
+    /* =====================================
+       Muted
+       ===================================== */
+
+    --muted: 225 14% 12%;
+    --muted-foreground: 215 10% 62%;
+
+
+    /* =====================================
+       Accent
+       Soft White / Gray
+       ===================================== */
+
+    --accent: 210 12% 82%;
+    --accent-foreground: 225 20% 5%;
+
+
+    /* =====================================
+       Destructive
+       ===================================== */
+
+    --destructive: 0 65% 50%;
+    --destructive-foreground: 210 20% 96%;
+
+
+    /* =====================================
+       Borders / Inputs
+       ===================================== */
+
+    --border: 225 14% 16%;
+    --input: 225 14% 16%;
+    --ring: 210 20% 96%;
+
+
+    /* =====================================
+       Radius
+       ===================================== */
+
+    --radius: 0.65rem;
+
+
+    /* =====================================
+       Theme Helpers
+       ===================================== */
+
+    --glow-primary: 210 20% 96%;
+
+    --gradient-hero:
+      linear-gradient(
+        135deg,
+        hsl(225 20% 5%),
+        hsl(225 18% 8%)
+      );
+
+    --shadow-glow:
+      0 0 30px hsl(0 0% 100% / 0.08);
+
+    --shadow-card:
+      0 10px 30px -12px hsl(0 0% 0% / 0.55);
+
+    --transition-smooth:
+      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+}
+
+
+/* =========================================
+   Base
+   ========================================= */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+
+    position: relative;
+    overflow-x: hidden;
+  }
+}
+
+
+/* =========================================
+   FIXED AMBIENT BACKGROUND
+   ========================================= */
+
+/*
+  This layer stays fixed while the website
+  scrolls over it.
+*/
+
+body::before {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  z-index: -2;
+  pointer-events: none;
+
+  background:
+    /* Large soft glow - top left */
+    radial-gradient(
+      circle at 12% 18%,
+      hsl(0 0% 100% / 0.035) 0%,
+      transparent 26%
+    ),
+
+    /* Soft glow - top right */
+    radial-gradient(
+      circle at 86% 12%,
+      hsl(0 0% 100% / 0.025) 0%,
+      transparent 28%
+    ),
+
+    /* Soft glow - bottom right */
+    radial-gradient(
+      circle at 78% 78%,
+      hsl(0 0% 100% / 0.018) 0%,
+      transparent 30%
+    ),
+
+    /* Soft center glow */
+    radial-gradient(
+      circle at 50% 45%,
+      hsl(0 0% 100% / 0.012) 0%,
+      transparent 42%
+    ),
+
+    /* Base */
+    linear-gradient(
+      135deg,
+      hsl(225 20% 5%),
+      hsl(225 18% 6%)
+    );
+
+  opacity: 1;
+}
+
+
+/* =========================================
+   FADED TECHNICAL GRID
+   ========================================= */
+
+body::after {
+  content: "";
+
+  position: fixed;
+  inset: 0;
+
+  z-index: -1;
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      hsl(0 0% 100% / 0.014) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      hsl(0 0% 100% / 0.014) 1px,
+      transparent 1px
+    );
+
+  background-size: 90px 90px;
+
+  /*
+    Fade the grid toward the edges so it
+    doesn't become visually dominant.
+  */
+  mask-image:
+    radial-gradient(
+      ellipse 85% 70% at center,
+      black 0%,
+      transparent 100%
+    );
+
+  -webkit-mask-image:
+    radial-gradient(
+      ellipse 85% 70% at center,
+      black 0%,
+      transparent 100%
+    );
+
+  opacity: 0.55;
+}
+
+
+/* =========================================
+   AMBIENT NETWORK / AUTOMATION LINES
+   ========================================= */
+
+/*
+  These are subtle diagonal technical lines.
+  They create the feeling of a connected
+  AI / automation system in the background.
+*/
+
+#root {
+  position: relative;
+  isolation: isolate;
+}
+
+
+/* =========================================
+   Very Subtle Section Transparency
+   ========================================= */
+
+/*
+  Existing sections such as bg-card/30 can
+  reveal the fixed background underneath.
+  No layout changes.
+*/
+
+section {
+  position: relative;
+}
+
+
+/* =========================================
+   Card Depth
+   ========================================= */
+
+.bg-card {
+  box-shadow:
+    0 10px 30px -18px hsl(0 0% 0% / 0.6);
+}
+
+
+/* =========================================
+   Smooth Theme Transitions
+   ========================================= */
+
+button,
+a,
+input,
+textarea,
+[class*="border-"] {
+  transition:
+    border-color 0.25s ease,
+    background-color 0.25s ease,
+    color 0.25s ease,
+    box-shadow 0.25s ease,
+    transform 0.25s ease;
+}
+
+
+/* =========================================
+   Selection
+   ========================================= */
+
+::selection {
+  background: hsl(0 0% 100% / 0.18);
+  color: hsl(0 0% 100%);
+}
+
+
+/* =========================================
+   Scrollbar
+   ========================================= */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(225 20% 5%);
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(225 10% 24%);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(225 10% 32%);
+}
+
+
+/* =========================================
+   Reduced Motion
+   ========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================
+   Mobile Background Adjustment
+   ========================================= */
+
+@media (max-width: 768px) {
+  body::after {
+    background-size: 65px 65px;
+    opacity: 0.35;
+  }
+
+  body::before {
+    opacity: 0.8;
+  }
+}
