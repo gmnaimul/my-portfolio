@@ -5,15 +5,21 @@ const { GoogleGenAI } = require("@google/genai");
 require("dotenv").config();
 
 const app = express();
+
 const PORT = process.env.PORT || 3000;
 
 // -------------------------
 // Middleware
 // -------------------------
 
+const allowedOrigins = [
+  "http://localhost:8080",
+  "https://naimulquader.dev",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:8080",
+    origin: allowedOrigins,
   })
 );
 
@@ -211,6 +217,6 @@ app.get("/*splat", (req, res) => {
 // Start Server
 // -------------------------
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
