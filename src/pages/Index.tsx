@@ -7,28 +7,34 @@ import Services from "@/components/Services";
 import Portfolio from "@/components/Portfolio";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
+import AIBackground from "@/components/AIBackground";
 
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { toast } from "sonner";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
-      <Navigation />
+    <div className="relative min-h-screen">
+      {/* Animated AI Background */}
+      <AIBackground />
 
-      <main>
-        <Hero />
-        <About />
-        <Experience />
-        <Skills />
-        <Services />
-        <Portfolio />
-        <Contact toast={toast} />
-      </main>
+      {/* Website Content */}
+      <div className="relative z-10">
+        <Navigation />
 
-      <Footer />
+        <main>
+          <Hero />
+          <About />
+          <Experience />
+          <Skills />
+          <Services />
+          <Portfolio />
+          <Contact toast={toast} />
+        </main>
 
-      <Sonner />
+        <Footer />
+        <Sonner />
+      </div>
     </div>
   );
 };

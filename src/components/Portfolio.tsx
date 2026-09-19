@@ -1,64 +1,16 @@
+import { useState } from "react";
+import {
+  ArrowRight,
+  BarChart3,
+  ExternalLink,
+  FileText,
+  Github,
+  Layers3,
+  ShieldCheck,
+} from "lucide-react";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Github, Sparkles, ExternalLink } from "lucide-react";
-import { useState } from "react";
-
-const callGeminiAPI = async (
-  prompt: string,
-  systemInstruction?: string
-) => {
-  const apiKey = "";
-
-  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
-  const payload = {
-    contents: [{ parts: [{ text: prompt }] }],
-    systemInstruction: systemInstruction
-      ? { parts: [{ text: systemInstruction }] }
-      : undefined,
-  };
-
-  let retries = 3;
-  let delay = 1000;
-
-  while (retries > 0) {
-    try {
-      const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-
-        return (
-          result?.candidates?.[0]?.content?.parts?.[0]?.text ||
-          "I couldn't generate a summary right now."
-        );
-      }
-
-      throw new Error(
-        `API request failed with status ${response.status}`
-      );
-    } catch (error) {
-      console.error("Gemini API call failed:", error);
-
-      retries--;
-
-      if (retries === 0) {
-        return "Sorry, I'm having trouble connecting to my AI assistant right now.";
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, delay));
-      delay *= 2;
-    }
-  }
-
-  return "Sorry, something went wrong.";
-};
 
 const Portfolio = () => {
   const projects = [
@@ -68,224 +20,344 @@ const Portfolio = () => {
         "Research project evaluating five machine learning models to identify key accident risk factors and predict severity using statistical analysis.",
       tags: ["Python", "ML", "Data Analysis", "Research"],
       category: "Data Science",
+      icon: BarChart3,
       color: "cyan",
     },
-
     {
       title: "Automated CI/CD Pipeline",
       description:
         "Developed and deployed containerized microservices using Docker, Kubernetes, and Jenkins for automated testing and deployment.",
       tags: ["DevOps", "Docker", "Kubernetes", "Jenkins"],
       category: "DevOps",
+      icon: Layers3,
       color: "purple",
     },
-
     {
       title: "Security Vulnerability Assessment Tool",
       description:
         "Built a security testing framework for identifying common web application vulnerabilities and generating comprehensive reports.",
       tags: ["Security", "Python", "Burp Suite", "Testing"],
       category: "Cyber Security",
+      icon: ShieldCheck,
       color: "orange",
     },
   ];
 
-  const [summary, setSummary] = useState<Record<number, string>>({});
-  const [isLoading, setIsLoading] = useState<Record<number, boolean>>({});
+  const [projectSummary, setProjectSummary] = useState("");
+  const [isSummaryLoading, setIsSummaryLoading] = useState(false);
 
-  const getSummary = async (
-    projectTitle: string,
-    projectDescription: string,
-    index: number
-  ) => {
-    if (summary[index]) {
-      setSummary((prev) => {
-        const updated = { ...prev };
-        delete updated[index];
-        return updated;
-      });
+  const getProjectSummary = async () => {
+    if (isSummaryLoading) return;
 
+    if (projectSummary) {
+      setProjectSummary("");
       return;
     }
 
-    setIsLoading((prev) => ({
-      ...prev,
-      [index]: true,
-    }));
+    setIsSummaryLoading(true);
 
-    const prompt = `
-Provide a concise and professional summary for this portfolio project.
+    try {
+      const apiUrl =
+        import.meta.env.VITE_API_URL ||
+        "https://naimul-ai-backend.onrender.com";
 
-Project Title:
-"${projectTitle}"
+      const prompt = `
+You are summarizing the featured projects displayed on a professional portfolio website.
 
-Project Description:
-"${projectDescription}"
+PROJECT 1
+Title: Comparative Analysis of ML Algorithms on Road Accident Data
+Category: Data Science
+Description:
+Research project evaluating five machine learning models to identify key accident risk factors and predict severity using statistical analysis.
+Technologies: Python, ML, Data Analysis, Research
 
-Only use the information provided above.
-Do not invent technologies, results, metrics, achievements, or responsibilities.
+PROJECT 2
+Title: Automated CI/CD Pipeline
+Category: DevOps
+Description:
+Developed and deployed containerized microservices using Docker, Kubernetes, and Jenkins for automated testing and deployment.
+Technologies: DevOps, Docker, Kubernetes, Jenkins
 
-Keep the summary suitable for a professional technology portfolio.
+PROJECT 3
+Title: Security Vulnerability Assessment Tool
+Category: Cyber Security
+Description:
+Built a security testing framework for identifying common web application vulnerabilities and generating comprehensive reports.
+Technologies: Security, Python, Burp Suite, Testing
+
+Write a concise and professional overview of these featured projects.
+
+Requirements:
+- Mention the technical areas represented by the projects.
+- Briefly explain what each project demonstrates.
+- Keep the response concise.
+- Use only the information provided above.
+- Do not invent technologies, metrics, results, achievements, or responsibilities.
+- Do not use markdown headings.
+- Keep the tone professional and natural.
 `;
 
-    const result = await callGeminiAPI(
-      prompt,
-      "You are a professional technical project summarizer. Be accurate and concise."
-    );
+      const response = await fetch(`${apiUrl}/api/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: prompt,
+        }),
+      });
 
-    setSummary((prev) => ({
-      ...prev,
-      [index]: result,
-    }));
+      if (!response.ok) {
+        throw new Error(
+          `Project summary request failed with status ${response.status}`
+        );
+      }
 
-    setIsLoading((prev) => ({
-      ...prev,
-      [index]: false,
-    }));
+      const data = await response.json();
+
+      if (!data?.reply) {
+        throw new Error("No summary was returned by the AI backend.");
+      }
+
+      setProjectSummary(data.reply);
+    } catch (error) {
+      console.error("Project summary error:", error);
+
+      setProjectSummary(
+        "Sorry, I couldn't generate the project summary right now. Please try again."
+      );
+    } finally {
+      setIsSummaryLoading(false);
+    }
+  };
+
+  const getCategoryClasses = (color: string) => {
+    if (color === "cyan") {
+      return "bg-cyan-500/10 text-cyan-400 border-cyan-500/20";
+    }
+
+    if (color === "purple") {
+      return "bg-purple-500/10 text-purple-400 border-purple-500/20";
+    }
+
+    return "bg-orange-500/10 text-orange-400 border-orange-500/20";
   };
 
   return (
-    <section id="portfolio" className="py-20 bg-card/30">
-      <div className="container mx-auto px-4">
+    <section
+      id="portfolio"
+      className="relative py-24 md:py-28 overflow-hidden bg-transparent"
+    >
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[10%] left-[8%] w-[420px] h-[420px] rounded-full bg-blue-500/[0.025] blur-3xl" />
+        <div className="absolute bottom-[8%] right-[8%] w-[420px] h-[420px] rounded-full bg-purple-500/[0.025] blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
 
-          {/* Section Header */}
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+          {/* =====================================================
+              SECTION HEADER
+              ===================================================== */}
+
+          <div
+            className="text-center max-w-3xl mx-auto mb-12 animate-fade-in"
+            style={{ animationDelay: "0.1s" }}
+          >
+            <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">
+              Selected Work
+            </p>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
               Featured{" "}
               <span className="text-gradient">Projects</span>
             </h2>
 
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-4"></div>
-
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+            <p className="mt-5 text-sm sm:text-base text-muted-foreground leading-relaxed max-w-2xl mx-auto">
               A selection of my technical projects, research, and practical
-              work across data science, DevOps, and cybersecurity.
+              work across data science, DevOps, cybersecurity, and intelligent
+              technology solutions.
             </p>
           </div>
 
-          {/* Projects Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            {projects.map((project, index) => (
-              <Card
-                key={index}
-                className="p-6 bg-card border-border flex flex-col justify-between hover:border-primary/50 transition-all duration-300 hover:scale-[1.02] animate-fade-in group"
-                style={{
-                  animationDelay: `${0.2 + index * 0.1}s`,
-                }}
-              >
-                <div>
+          {/* =====================================================
+              PROJECT CARDS
+              ===================================================== */}
 
-                  {/* Category */}
-                  <div className="mb-4">
-                    <span
-                      className={`px-3 py-1 text-xs rounded-full font-medium ${
-                        project.color === "cyan"
-                          ? "bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"
-                          : project.color === "purple"
-                          ? "bg-purple-500/10 text-purple-400 border border-purple-500/20"
-                          : "bg-orange-500/10 text-orange-400 border border-orange-500/20"
-                      }`}
-                    >
-                      {project.category}
-                    </span>
-                  </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-10">
+            {projects.map((project, index) => {
+              const Icon = project.icon;
 
-                  {/* Project Title */}
-                  <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
-                    {project.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-muted-foreground mb-4 text-sm leading-relaxed">
-                    {project.description}
-                  </p>
-
-                  {/* AI Generated Summary */}
-                  {summary[index] && (
-                    <div className="mb-4 p-4 rounded-lg bg-muted/50 border border-border">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Sparkles className="h-4 w-4 text-primary" />
-
-                        <span className="text-xs font-semibold text-primary">
-                          AI Summary
-                        </span>
-                      </div>
-
-                      <p className="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
-                        {summary[index]}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag, idx) => (
-                      <span
-                        key={idx}
-                        className="px-2 py-1 bg-muted text-xs rounded border border-border"
-                      >
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-
-                </div>
-
-                {/* AI Summary Button */}
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    getSummary(
-                      project.title,
-                      project.description,
-                      index
-                    )
-                  }
-                  disabled={isLoading[index]}
-                  className="w-full"
+              return (
+                <Card
+                  key={project.title}
+                  className="group relative overflow-hidden bg-card/25 backdrop-blur-xl border-border/60 hover:bg-card/35 hover:border-primary/20 transition-all duration-300 animate-fade-in"
+                  style={{
+                    animationDelay: `${0.2 + index * 0.1}s`,
+                  }}
                 >
-                  <Sparkles className="mr-2 h-4 w-4" />
+                  <div className="p-6 sm:p-7 h-full flex flex-col">
 
-                  {isLoading[index]
-                    ? "Summarizing..."
-                    : summary[index]
-                    ? "Hide Summary"
-                    : "✨ Get Project Summary"}
-                </Button>
+                    {/* Top Row */}
+                    <div className="flex items-start justify-between gap-4 mb-7">
+                      <span className="text-[10px] font-mono text-muted-foreground/50">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
 
-              </Card>
-            ))}
+                      <div className="w-10 h-10 rounded-xl border border-border/70 bg-background/20 flex items-center justify-center group-hover:border-primary/30 transition-colors duration-300">
+                        <Icon className="w-4.5 h-4.5 text-muted-foreground group-hover:text-primary transition-colors duration-300" />
+                      </div>
+                    </div>
+
+                    {/* Category */}
+                    <div className="mb-4">
+                      <span
+                        className={`inline-flex items-center px-3 py-1 rounded-full border text-[10px] sm:text-xs font-medium ${getCategoryClasses(
+                          project.color
+                        )}`}
+                      >
+                        {project.category}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg sm:text-xl font-bold leading-snug group-hover:text-primary transition-colors duration-300">
+                      {project.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mt-5">
+                      {project.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="px-2.5 py-1 rounded-lg border border-border/60 bg-background/20 text-[10px] sm:text-xs text-muted-foreground"
+                        >
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Bottom */}
+                    <div className="mt-auto pt-6">
+                      <div className="border-t border-border/50 pt-4">
+                        <div className="flex items-center justify-between text-xs text-muted-foreground">
+                          <span>Project Overview</span>
+
+                          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
 
-          {/* GitHub CTA */}
-          <div
-            className="text-center animate-fade-in"
-            style={{ animationDelay: "0.6s" }}
-          >
-            <Card className="p-8 bg-card border-border inline-block">
-              <div className="flex flex-col md:flex-row items-center gap-6">
+          {/* =====================================================
+              AI PROJECT SUMMARY
+              ===================================================== */}
 
-                {/* GitHub Icon */}
-                <div className="p-4 bg-primary/10 rounded-full">
-                  <Github className="h-12 w-12 text-primary" />
+          <Card
+            className="relative overflow-hidden bg-card/25 backdrop-blur-xl border-border/60 animate-fade-in"
+            style={{ animationDelay: "0.5s" }}
+          >
+            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+
+            <div className="p-6 sm:p-7 md:p-8">
+
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+
+                {/* Left Side */}
+                <div className="flex items-center gap-4 min-w-0">
+
+                  {/* File Icon */}
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 shrink-0 rounded-xl border border-primary/60 bg-background/20 flex items-center justify-center">
+                    <FileText className="w-6 h-6 sm:w-7 sm:h-7 text-foreground" />
+                  </div>
+
+                  {/* Text */}
+                  <div className="min-w-0">
+                    <h3 className="text-lg sm:text-xl font-bold">
+                      AI Project Summary
+                    </h3>
+
+                    <p className="mt-1 text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      Let the portfolio assistant summarize the projects based
+                      on the information available on this website.
+                    </p>
+                  </div>
                 </div>
 
-                {/* Content */}
-                <div className="text-center md:text-left">
-                  <h3 className="text-2xl font-bold mb-2">
-                    View More on GitHub
-                  </h3>
+                {/* Generate Button */}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={getProjectSummary}
+                  disabled={isSummaryLoading}
+                  className="shrink-0 border-border/70 bg-background/10 hover:bg-primary/[0.06] hover:border-primary/30"
+                >
+                  <ArrowRight className="mr-2 h-4 w-4" />
 
-                  <p className="text-muted-foreground mb-4">
-                    Explore my complete project portfolio and technical
-                    contributions.
-                  </p>
+                  {isSummaryLoading
+                    ? "Generating..."
+                    : projectSummary
+                    ? "Hide Summary"
+                    : "Generate Summary"}
+                </Button>
+              </div>
 
+              {/* Generated Summary */}
+              {projectSummary && (
+                <div className="mt-6 pt-6 border-t border-border/50 animate-fade-in">
+                  <div className="rounded-xl border border-border/50 bg-background/20 backdrop-blur-md p-5 sm:p-6">
+                    <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      {projectSummary}
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </Card>
+
+          {/* =====================================================
+              GITHUB CTA
+              ===================================================== */}
+
+          <div
+            className="mt-10 flex justify-center animate-fade-in"
+            style={{ animationDelay: "0.6s" }}
+          >
+            <Card className="relative overflow-hidden bg-card/25 backdrop-blur-xl border-border/60">
+              <div className="px-6 py-5">
+                <div className="flex flex-col sm:flex-row items-center gap-5">
+
+                  {/* GitHub Icon */}
+                  <div className="w-11 h-11 rounded-xl border border-border/60 bg-background/20 flex items-center justify-center shrink-0">
+                    <Github className="w-5 h-5 text-primary" />
+                  </div>
+
+                  {/* Text */}
+                  <div className="text-center sm:text-left">
+                    <h3 className="text-base font-bold">
+                      View More on GitHub
+                    </h3>
+
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Explore my complete project portfolio and technical
+                      contributions.
+                    </p>
+                  </div>
+
+                  {/* GitHub Button */}
                   <Button
                     variant="outline"
-                    className="border-primary/30 hover:bg-primary/10"
+                    size="sm"
+                    className="shrink-0 border-primary/30 hover:bg-primary/[0.06]"
                     asChild
                   >
                     <a
@@ -294,12 +366,11 @@ Keep the summary suitable for a professional technology portfolio.
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2"
                     >
-                      Visit GitHub Profile
-                      <ExternalLink className="h-4 w-4" />
+                      Visit GitHub
+                      <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   </Button>
                 </div>
-
               </div>
             </Card>
           </div>

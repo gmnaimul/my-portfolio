@@ -169,8 +169,8 @@ const AIAssistant = () => {
 
       <Card className="p-6 bg-card border-border h-full flex flex-col">
         <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-          <Sparkles className="text-primary h-5 w-5" />
-          Ask my AI Assistant
+           {/* <Sparkles className="text-primary h-5 w-5" /> */}
+           &gt;Ask my AI Assistant
         </h3>
 
         {/* About Chat Messages */}

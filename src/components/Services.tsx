@@ -1,187 +1,106 @@
-import { Card } from "@/components/ui/card";
 import {
-  Bot,
-  Workflow,
-  BarChart3,
-  Server,
+  Search,
+  CheckCircle2,
+  SlidersHorizontal,
+  GitBranch,
 } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 const Services = () => {
-  const services = [
+  const approachSteps = [
     {
-      title: "AI Research & Evaluation",
-      icon: Bot,
-      color: "primary",
+      number: "01",
+      icon: Search,
+      title: "Research",
       description:
-        "Research and evaluate emerging AI tools and technologies to identify practical opportunities for business adoption and productivity improvement.",
-      features: [
-        "AI tool and technology evaluation",
-        "Practical use-case research",
-        "AI capability and workflow assessment",
-        "Business-focused AI adoption",
-      ],
+        "Understand the problem, tools, and available technologies.",
     },
-
     {
-      title: "AI Workflow & Automation",
-      icon: Workflow,
-      color: "accent",
+      number: "02",
+      icon: CheckCircle2,
+      title: "Evaluate",
       description:
-        "Design and test AI-assisted workflows using prompt engineering, RAG, AI agents, and automation platforms.",
-      features: [
-        "Prompt engineering and optimization",
-        "RAG-based AI workflows",
-        "AI agent workflows",
-        "n8n, Make and Zapier automation",
-      ],
+        "Test capabilities and identify the most practical approach.",
     },
-
     {
-      title: "Data Analysis",
-      icon: BarChart3,
-      color: "cyan",
+      number: "03",
+      icon: SlidersHorizontal,
+      title: "Design",
       description:
-        "Transform raw data into actionable insights through structured analysis, visualization, and reporting.",
-      features: [
-        "Statistical analysis and modeling",
-        "Data cleaning and preprocessing",
-        "Data visualization and reporting",
-        "Business-focused data insights",
-      ],
+        "Create a workflow or solution around the selected approach.",
     },
-
     {
-      title: "DevOps & Technical Solutions",
-      icon: Server,
-      color: "purple",
+      number: "04",
+      icon: GitBranch,
+      title: "Implement",
       description:
-        "Support reliable and efficient technical environments through modern DevOps practices, automation, and infrastructure technologies.",
-      features: [
-        "CI/CD pipeline setup and optimization",
-        "Docker and Kubernetes environments",
-        "Cloud and infrastructure support",
-        "Deployment automation and troubleshooting",
-      ],
+        "Deploy, document, and continuously improve the solution.",
     },
   ];
 
-  const scrollToContact = () => {
-    document
-      .getElementById("contact")
-      ?.scrollIntoView({ behavior: "smooth" });
-  };
-
   return (
-    <section id="services" className="py-20 bg-background">
-      <div className="container mx-auto px-4">
-        <div className="max-w-6xl mx-auto">
+    <section
+      id="services"
+      className="relative py-24 md:py-28 overflow-hidden bg-transparent"
+    >
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-[10%] left-[5%] w-[420px] h-[420px] rounded-full bg-blue-500/[0.025] blur-3xl" />
+        <div className="absolute top-[15%] right-[5%] w-[420px] h-[420px] rounded-full bg-purple-500/[0.025] blur-3xl" />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-7xl mx-auto">
 
           {/* Section Header */}
-          <div className="text-center mb-16 animate-fade-in">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              What I <span className="text-gradient">Offer</span>
-            </h2>
-
-            <div className="w-20 h-1 bg-gradient-to-r from-primary to-accent mx-auto mb-4"></div>
-
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              Practical AI, automation, data, and technical solutions focused
-              on improving workflows, productivity, and operational efficiency.
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <p className="text-xs uppercase tracking-[0.25em] text-primary font-semibold mb-3">
+              Approach
             </p>
+
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
+              From Research to Implementation
+            </h2>
           </div>
 
-          {/* Services Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {services.map((service, index) => (
-              <Card
-                key={index}
-                className="p-6 md:p-8 bg-card border-border hover:border-primary/50 transition-all duration-300 hover:scale-[1.02] animate-fade-in group"
-                style={{
-                  animationDelay: `${0.2 + index * 0.1}s`,
-                }}
-              >
-                {/* Icon + Title */}
-                <div className="text-center mb-6">
+          {/* Approach Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {approachSteps.map((step) => {
+              const Icon = step.icon;
 
-                  <div
-                    className={`inline-flex p-4 rounded-full mb-4 transition-colors ${
-                      service.color === "primary"
-                        ? "bg-primary/10 group-hover:bg-primary/20"
-                        : service.color === "accent"
-                        ? "bg-accent/10 group-hover:bg-accent/20"
-                        : service.color === "cyan"
-                        ? "bg-cyan-500/10 group-hover:bg-cyan-500/20"
-                        : "bg-purple-500/10 group-hover:bg-purple-500/20"
-                    }`}
-                  >
-                    <service.icon
-                      className={`h-12 w-12 ${
-                        service.color === "primary"
-                          ? "text-primary"
-                          : service.color === "accent"
-                          ? "text-accent"
-                          : service.color === "cyan"
-                          ? "text-cyan-400"
-                          : "text-purple-400"
-                      }`}
-                    />
+              return (
+                <Card
+                  key={step.number}
+                  className="group relative h-full overflow-hidden bg-card/25 backdrop-blur-xl border-border/60 hover:border-primary/30 hover:bg-card/35 transition-all duration-300"
+                >
+                  {/* Top Accent */}
+                  <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+                  <div className="relative p-6 sm:p-7 h-full min-h-[210px] flex flex-col">
+                    {/* Number + Icon */}
+                    <div className="flex items-start justify-between">
+                      <span className="text-xs font-mono text-muted-foreground/50">
+                        {step.number}
+                      </span>
+
+                      <div className="w-11 h-11 rounded-xl border border-primary/15 bg-primary/[0.06] flex items-center justify-center group-hover:border-primary/30 group-hover:bg-primary/[0.10] transition-all duration-300">
+                        <Icon className="w-5 h-5 text-primary group-hover:scale-110 transition-transform duration-300" />
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="mt-7">
+                      <h3 className="text-xl font-bold">
+                        {step.title}
+                      </h3>
+
+                      <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
-
-                  <h3 className="text-2xl font-bold mb-3">
-                    {service.title}
-                  </h3>
-
-                  <p className="text-muted-foreground">
-                    {service.description}
-                  </p>
-                </div>
-
-                {/* Features */}
-                <ul className="space-y-3">
-                  {service.features.map((feature, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start gap-2 text-sm"
-                    >
-                      <span
-                        className={
-                          service.color === "primary"
-                            ? "text-primary mt-0.5"
-                            : service.color === "accent"
-                            ? "text-accent mt-0.5"
-                            : service.color === "cyan"
-                            ? "text-cyan-400 mt-0.5"
-                            : "text-purple-400 mt-0.5"
-                        }
-                      >
-                        ✓
-                      </span>
-
-                      <span className="text-muted-foreground">
-                        {feature}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-              </Card>
-            ))}
-          </div>
-
-          {/* CTA */}
-          <div
-            className="text-center animate-fade-in"
-            style={{ animationDelay: "0.6s" }}
-          >
-            <Button
-              size="lg"
-              className="bg-primary hover:bg-primary/90 text-primary-foreground"
-              onClick={scrollToContact}
-            >
-              Let's Work Together
-            </Button>
+                </Card>
+              );
+            })}
           </div>
 
         </div>

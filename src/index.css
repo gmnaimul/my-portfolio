@@ -2,123 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
-/* =========================================
-   DARK MINIMAL AI PORTFOLIO THEME
-   Fixed Ambient Background
-   ========================================= */
+/* =========================================================
+   ROOT THEME
+   ========================================================= */
 
 @layer base {
   :root {
-    /* =====================================
-       Main Theme
-       ===================================== */
-
-    --background: 225 20% 5%;
+    --background: 225 25% 5%;
     --foreground: 210 20% 96%;
 
-
-    /* =====================================
-       Cards
-       ===================================== */
-
-    --card: 225 18% 8%;
+    --card: 225 20% 9%;
     --card-foreground: 210 20% 96%;
 
-
-    /* =====================================
-       Popovers
-       ===================================== */
-
-    --popover: 225 18% 9%;
+    --popover: 225 20% 9%;
     --popover-foreground: 210 20% 96%;
 
-
-    /* =====================================
-       Primary
-       White
-       ===================================== */
-
     --primary: 210 20% 96%;
-    --primary-foreground: 225 20% 5%;
+    --primary-foreground: 225 25% 5%;
 
-
-    /* =====================================
-       Secondary
-       ===================================== */
-
-    --secondary: 225 14% 15%;
+    --secondary: 225 16% 15%;
     --secondary-foreground: 210 20% 96%;
 
+    --muted: 225 15% 13%;
+    --muted-foreground: 215 10% 64%;
 
-    /* =====================================
-       Muted
-       ===================================== */
-
-    --muted: 225 14% 12%;
-    --muted-foreground: 215 10% 62%;
-
-
-    /* =====================================
-       Accent
-       Soft White / Gray
-       ===================================== */
-
-    --accent: 210 12% 82%;
-    --accent-foreground: 225 20% 5%;
-
-
-    /* =====================================
-       Destructive
-       ===================================== */
+    --accent: 210 14% 82%;
+    --accent-foreground: 225 25% 5%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 210 20% 96%;
 
-
-    /* =====================================
-       Borders / Inputs
-       ===================================== */
-
-    --border: 225 14% 16%;
-    --input: 225 14% 16%;
+    --border: 225 15% 17%;
+    --input: 225 15% 17%;
     --ring: 210 20% 96%;
-
-
-    /* =====================================
-       Radius
-       ===================================== */
 
     --radius: 0.65rem;
 
-
-    /* =====================================
-       Theme Helpers
-       ===================================== */
-
-    --glow-primary: 210 20% 96%;
-
-    --gradient-hero:
-      linear-gradient(
-        135deg,
-        hsl(225 20% 5%),
-        hsl(225 18% 8%)
-      );
-
-    --shadow-glow:
-      0 0 30px hsl(0 0% 100% / 0.08);
-
-    --shadow-card:
-      0 10px 30px -12px hsl(0 0% 0% / 0.55);
-
-    --transition-smooth:
-      all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    /* AI Colors */
+    --ai-blue: 217 91% 60%;
+    --ai-cyan: 199 89% 60%;
+    --ai-purple: 258 90% 66%;
+    --ai-pink: 280 85% 70%;
   }
 }
 
-
-/* =========================================
-   Base
-   ========================================= */
+/* =========================================================
+   GLOBAL
+   ========================================================= */
 
 @layer base {
   * {
@@ -127,217 +57,387 @@
 
   html {
     scroll-behavior: smooth;
+    background: hsl(var(--background));
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply text-foreground font-sans antialiased;
 
     position: relative;
     overflow-x: hidden;
+
+    /*
+      IMPORTANT:
+      Do not give the body a solid background.
+      The fixed AIBackground component is responsible
+      for the visible page background.
+    */
+    background: transparent;
+  }
+
+  button,
+  a,
+  input,
+  textarea {
+    font-family: inherit;
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.18);
+    color: hsl(var(--foreground));
   }
 }
 
-
-/* =========================================
-   FIXED AMBIENT BACKGROUND
-   ========================================= */
-
-/*
-  This layer stays fixed while the website
-  scrolls over it.
-*/
-
-body::before {
-  content: "";
-
-  position: fixed;
-  inset: 0;
-
-  z-index: -2;
-  pointer-events: none;
-
-  background:
-    /* Large soft glow - top left */
-    radial-gradient(
-      circle at 12% 18%,
-      hsl(0 0% 100% / 0.035) 0%,
-      transparent 26%
-    ),
-
-    /* Soft glow - top right */
-    radial-gradient(
-      circle at 86% 12%,
-      hsl(0 0% 100% / 0.025) 0%,
-      transparent 28%
-    ),
-
-    /* Soft glow - bottom right */
-    radial-gradient(
-      circle at 78% 78%,
-      hsl(0 0% 100% / 0.018) 0%,
-      transparent 30%
-    ),
-
-    /* Soft center glow */
-    radial-gradient(
-      circle at 50% 45%,
-      hsl(0 0% 100% / 0.012) 0%,
-      transparent 42%
-    ),
-
-    /* Base */
-    linear-gradient(
-      135deg,
-      hsl(225 20% 5%),
-      hsl(225 18% 6%)
-    );
-
-  opacity: 1;
-}
-
-
-/* =========================================
-   FADED TECHNICAL GRID
-   ========================================= */
-
-body::after {
-  content: "";
-
-  position: fixed;
-  inset: 0;
-
-  z-index: -1;
-  pointer-events: none;
-
-  background-image:
-    linear-gradient(
-      hsl(0 0% 100% / 0.014) 1px,
-      transparent 1px
-    ),
-    linear-gradient(
-      90deg,
-      hsl(0 0% 100% / 0.014) 1px,
-      transparent 1px
-    );
-
-  background-size: 90px 90px;
-
-  /*
-    Fade the grid toward the edges so it
-    doesn't become visually dominant.
-  */
-  mask-image:
-    radial-gradient(
-      ellipse 85% 70% at center,
-      black 0%,
-      transparent 100%
-    );
-
-  -webkit-mask-image:
-    radial-gradient(
-      ellipse 85% 70% at center,
-      black 0%,
-      transparent 100%
-    );
-
-  opacity: 0.55;
-}
-
-
-/* =========================================
-   AMBIENT NETWORK / AUTOMATION LINES
-   ========================================= */
-
-/*
-  These are subtle diagonal technical lines.
-  They create the feeling of a connected
-  AI / automation system in the background.
-*/
+/* =========================================================
+   ROOT APP LAYER
+   ========================================================= */
 
 #root {
   position: relative;
   isolation: isolate;
+  min-height: 100vh;
 }
-
-
-/* =========================================
-   Very Subtle Section Transparency
-   ========================================= */
 
 /*
-  Existing sections such as bg-card/30 can
-  reveal the fixed background underneath.
-  No layout changes.
+  Keep every page-level section transparent so the
+  fixed AI background remains visible.
 */
-
+main,
+main > section,
+main > div,
+main > div > section,
 section {
   position: relative;
+  background-color: transparent !important;
 }
 
+/*
+  Prevent common Tailwind background utilities from
+  creating large opaque areas over the AI background.
+*/
+main .bg-background,
+main .bg-card,
+main .bg-muted,
+section.bg-background,
+section.bg-card,
+section.bg-muted {
+  background-color: transparent !important;
+}
 
-/* =========================================
-   Card Depth
-   ========================================= */
+/* =========================================================
+   TEXT GRADIENT
+   ========================================================= */
+
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--ai-blue)),
+    hsl(var(--ai-purple)),
+    hsl(var(--ai-pink))
+  );
+
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* =========================================================
+   GLASS / CARD SYSTEM
+   ========================================================= */
+
+/*
+  Default card appearance.
+  This keeps your cards translucent while allowing the
+  AI background image to remain visible behind them.
+*/
 
 .bg-card {
+  background-color: hsl(var(--card) / 0.42) !important;
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  border-color: hsl(0 0% 100% / 0.08);
+
   box-shadow:
-    0 10px 30px -18px hsl(0 0% 0% / 0.6);
+    0 12px 35px -18px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
+/*
+  Explicit glass utility.
+*/
 
-/* =========================================
-   Smooth Theme Transitions
-   ========================================= */
+.ai-glass {
+  background: hsl(var(--card) / 0.30);
 
-button,
-a,
-input,
-textarea,
-[class*="border-"] {
-  transition:
-    border-color 0.25s ease,
-    background-color 0.25s ease,
-    color 0.25s ease,
-    box-shadow 0.25s ease,
-    transform 0.25s ease;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  border: 1px solid hsl(0 0% 100% / 0.08);
+
+  box-shadow:
+    0 15px 40px -20px rgba(0, 0, 0, 0.65),
+    inset 0 1px 0 rgba(255, 255, 255, 0.025);
 }
 
+/*
+  Preserve glass effect for cards using Tailwind
+  opacity utilities such as bg-card/25.
+*/
 
-/* =========================================
-   Selection
-   ========================================= */
-
-::selection {
-  background: hsl(0 0% 100% / 0.18);
-  color: hsl(0 0% 100%);
+[class*="bg-card/"] {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
+/*
+  Preserve subtle glass effect for inner elements.
+*/
 
-/* =========================================
-   Scrollbar
-   ========================================= */
+[class*="bg-background/"] {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   FIXED AI BACKGROUND
+   ========================================================= */
+
+.ai-background-overlay {
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(1, 5, 18, 0.12),
+      rgba(1, 5, 18, 0.16)
+    );
+}
+
+/*
+  Ambient blue light.
+*/
+
+.ai-light {
+  position: absolute;
+
+  width: 360px;
+  height: 360px;
+
+  border-radius: 9999px;
+
+  pointer-events: none;
+
+  filter: blur(100px);
+
+  opacity: 0.10;
+
+  will-change: transform;
+}
+
+/* Blue light */
+
+.ai-light-blue {
+  top: 8%;
+  left: 8%;
+
+  background: hsl(var(--ai-blue) / 0.28);
+
+  animation: aiFloatBlue 16s ease-in-out infinite;
+}
+
+/* Purple light */
+
+.ai-light-purple {
+  right: 8%;
+  bottom: 12%;
+
+  background: hsl(var(--ai-purple) / 0.24);
+
+  animation: aiFloatPurple 20s ease-in-out infinite;
+}
+
+/* =========================================================
+   AI SPARKS
+   ========================================================= */
+
+.ai-spark {
+  position: absolute;
+
+  width: 3px;
+  height: 3px;
+
+  border-radius: 9999px;
+
+  background: hsl(var(--ai-cyan));
+
+  box-shadow:
+    0 0 8px hsl(var(--ai-cyan) / 0.8),
+    0 0 18px hsl(var(--ai-blue) / 0.45);
+
+  opacity: 0.65;
+
+  animation: aiSpark 4s ease-in-out infinite;
+
+  will-change: transform, opacity;
+}
+
+/* Spark positions */
+
+.spark-1 {
+  top: 8%;
+  left: 17%;
+  animation-delay: 0s;
+}
+
+.spark-2 {
+  top: 14%;
+  left: 31%;
+  animation-delay: 0.8s;
+}
+
+.spark-3 {
+  top: 7%;
+  left: 52%;
+  animation-delay: 1.4s;
+}
+
+.spark-4 {
+  top: 18%;
+  left: 68%;
+  animation-delay: 2.1s;
+}
+
+.spark-5 {
+  top: 32%;
+  left: 82%;
+  animation-delay: 0.5s;
+}
+
+.spark-6 {
+  top: 45%;
+  left: 11%;
+  animation-delay: 1.8s;
+}
+
+.spark-7 {
+  top: 51%;
+  left: 27%;
+  animation-delay: 2.7s;
+}
+
+.spark-8 {
+  top: 59%;
+  left: 54%;
+  animation-delay: 0.9s;
+}
+
+.spark-9 {
+  top: 68%;
+  left: 73%;
+  animation-delay: 2.4s;
+}
+
+.spark-10 {
+  top: 76%;
+  left: 89%;
+  animation-delay: 1.2s;
+}
+
+.spark-11 {
+  top: 84%;
+  left: 38%;
+  animation-delay: 3s;
+}
+
+.spark-12 {
+  top: 91%;
+  left: 61%;
+  animation-delay: 1.7s;
+}
+
+/* =========================================================
+   ANIMATIONS
+   ========================================================= */
+
+@keyframes aiFloatBlue {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(35px, 20px, 0) scale(1.08);
+  }
+}
+
+@keyframes aiFloatPurple {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-30px, -25px, 0) scale(1.06);
+  }
+}
+
+@keyframes aiSpark {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.8);
+  }
+
+  50% {
+    opacity: 0.9;
+    transform: scale(1.5);
+  }
+}
+
+/* =========================================================
+   GENERAL FADE / REVEAL
+   ========================================================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.6s ease-out both;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
 
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: hsl(225 20% 5%);
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: hsl(225 10% 24%);
-  border-radius: 999px;
+  background: hsl(215 10% 30% / 0.65);
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: hsl(225 10% 32%);
+  background: hsl(215 10% 40% / 0.8);
 }
 
-
-/* =========================================
-   Reduced Motion
-   ========================================= */
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
 
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -353,18 +453,20 @@ textarea,
   }
 }
 
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
-/* =========================================
-   Mobile Background Adjustment
-   ========================================= */
+@media (max-width: 640px) {
+  .ai-light {
+    width: 260px;
+    height: 260px;
 
-@media (max-width: 768px) {
-  body::after {
-    background-size: 65px 65px;
-    opacity: 0.35;
+    filter: blur(80px);
   }
 
-  body::before {
-    opacity: 0.8;
+  .ai-spark {
+    width: 2px;
+    height: 2px;
   }
 }

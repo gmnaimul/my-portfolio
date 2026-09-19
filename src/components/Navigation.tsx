@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -13,7 +13,9 @@ const Navigation = () => {
 
     window.addEventListener("scroll", handleScroll);
 
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const navItems = [
@@ -23,6 +25,7 @@ const Navigation = () => {
     { name: "Skills", href: "#skills" },
     { name: "Services", href: "#services" },
     { name: "Portfolio", href: "#portfolio" },
+    { name: "Contact", href: "#contact" },
   ];
 
   const scrollToSection = (href: string) => {
@@ -30,7 +33,6 @@ const Navigation = () => {
 
     element?.scrollIntoView({
       behavior: "smooth",
-      block: "start",
     });
 
     setIsMobileMenuOpen(false);
@@ -38,30 +40,42 @@ const Navigation = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 ${
         isScrolled
-          ? "bg-card/95 backdrop-blur-md border-b border-border shadow-lg"
-          : "bg-background/20 backdrop-blur-sm"
+          ? "backdrop-blur-[2px] border-b border-white/[0.04]"
+          : "backdrop-blur-0"
       }`}
     >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
 
-          {/* Logo */}
+          {/* =====================================================
+              BRAND
+          ===================================================== */}
           <a
             href="#home"
             onClick={(e) => {
               e.preventDefault();
               scrollToSection("#home");
             }}
-            className="text-xl font-bold tracking-tight group"
+            className="flex items-center gap-2.5"
           >
-            <span className="text-gradient group-hover:opacity-80 transition-opacity">
+            {/* Terminal-style mark */}
+            <div className="w-9 h-9 rounded-xl border border-white/[0.12] bg-white/[0.025] flex items-center justify-center">
+              <span className="text-sm sm:text-base font-mono font-semibold text-foreground tracking-tight">
+                &gt;_
+              </span>
+            </div>
+
+            {/* Name */}
+            <span className="text-lg sm:text-xl font-bold text-foreground">
               Naimul
             </span>
           </a>
 
-          {/* Desktop Navigation */}
+          {/* =====================================================
+              DESKTOP NAVIGATION
+          ===================================================== */}
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <a
@@ -71,46 +85,41 @@ const Navigation = () => {
                   e.preventDefault();
                   scrollToSection(item.href);
                 }}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-all duration-200 rounded-lg hover:bg-muted"
+                className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
+                  item.name === "Contact"
+                    ? "ml-2 bg-foreground text-background hover:bg-foreground/90"
+                    : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+                }`}
               >
                 {item.name}
               </a>
             ))}
-
-            {/* Contact CTA */}
-            <a
-              href="#contact"
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("#contact");
-              }}
-              className="ml-2 px-4 py-2 text-sm font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              Contact
-            </a>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* =====================================================
+              MOBILE MENU BUTTON
+          ===================================================== */}
           <Button
             variant="ghost"
             size="icon"
             className="md:hidden"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-label="Toggle navigation menu"
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5" />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-5 w-5" />
             )}
           </Button>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* =====================================================
+            MOBILE NAVIGATION
+        ===================================================== */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border bg-card/95 backdrop-blur-md">
-            <div className="flex flex-col space-y-2">
-
+          <div className="md:hidden py-4 border-t border-white/[0.06] bg-black/20 backdrop-blur-md">
+            <div className="flex flex-col space-y-1">
               {navItems.map((item) => (
                 <a
                   key={item.name}
@@ -119,24 +128,15 @@ const Navigation = () => {
                     e.preventDefault();
                     scrollToSection(item.href);
                   }}
-                  className="px-4 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
+                  className={`px-4 py-2.5 text-sm font-medium rounded-lg transition-colors ${
+                    item.name === "Contact"
+                      ? "bg-foreground text-background"
+                      : "text-muted-foreground hover:text-foreground hover:bg-white/[0.04]"
+                  }`}
                 >
                   {item.name}
                 </a>
               ))}
-
-              {/* Mobile Contact CTA */}
-              <a
-                href="#contact"
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToSection("#contact");
-                }}
-                className="mt-2 px-4 py-2.5 text-sm font-semibold text-center rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-              >
-                Contact Me
-              </a>
-
             </div>
           </div>
         )}
