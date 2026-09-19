@@ -17,6 +17,12 @@ type Message = {
   content: string;
 };
 
+// API URL
+// Local: http://localhost:3000
+// Production: https://naimul-ai-backend.onrender.com
+const API_URL =
+  import.meta.env.VITE_API_URL || "http://localhost:3000";
+
 const AIAssistant = () => {
   const [aiInput, setAiInput] = useState("");
 
@@ -68,7 +74,7 @@ const AIAssistant = () => {
 
     try {
       // Send message to Express backend
-      const response = await fetch("http://localhost:3000/api/chat", {
+      const response = await fetch(`${API_URL}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
